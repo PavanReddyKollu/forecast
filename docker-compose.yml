@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./forecast-backend/Dockerfile
+    container_name: forecast-backend
+    hostname: forecast-backend
+    environment:
+      - BACKEND_HOST_IP=forecast-backend
+    ports:
+      - "8000:8000"
+    networks:
+      - gateway
+  frontend:
+    build:
+      context: .
+      dockerfile: ./forecasting-ui/Dockerfile
+    container_name: forecast-ui
+    hostname: forecast-ui
+    environment:
+      - UI_HOST_IP=forecast-ui
+    ports:
+      - "3000:3000"
+    networks:
+      - gateway
+
+  postgres:
+    image: postgres:15
+    hostname: postgres_vinay
+    restart: always
+    container_name: postgres_vinay
+    ports:
+      - "5433:5432"
+    environment:
+      - DATABASE_HOST=postgres_vinay
+      - POSTGRES_PASSWORD=postgresPassword
+    volumes:
+      - postgres_backup:/var/lib/postgresql/data
+    networks:
+      - gateway
+  
+  pgweb:
+    image: sosedoff/pgweb
+    restart: always
+    container_name: pgweb_vinay
+    ports:
+      - "8081:8081"
+    links:
+      - postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:postgresPassword@postgres:5432/postgres?sslmode=disable
+    depends_on:
+      - postgres
+    networks:
+      - gateway
+volumes:
+  postgres_backup:
+networks:
+  gateway:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
+    

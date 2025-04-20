@@ -86,7 +86,7 @@ def run(data):
     forecast = np.array(forecast)  # shape (365, 4)
     forecast_rescaled = scaler.inverse_transform(forecast)
 
-    last_date = df1['Date'].iloc[-1] 
+    last_date = df.index[-1]
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=365, freq='D')
 
     forecast_df = pd.DataFrame(forecast_rescaled, columns=df.columns, index=future_dates)

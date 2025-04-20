@@ -17,7 +17,7 @@ async def shutdown():
     # Optional cleanup
     pass
 
-origins = ["http://localhost:5173",]
+origins = ["https://congenial-space-journey-q7v7j76w54vwh69wj-5173.app.github.dev", "*"]
 
 app.add_middleware(
     CORSMiddleware,
