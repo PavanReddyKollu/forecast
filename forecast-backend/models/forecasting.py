@@ -46,7 +46,7 @@ def run(data):
     print("train LSTM model")
     # train LSTM model
     scaler = MinMaxScaler()
-    df = scaler.fit_transform(df)
+    scaled_data = scaler.fit_transform(df)
 
     def create_sequences(data, seq_length=30):
         X, y = [], []
@@ -56,7 +56,7 @@ def run(data):
         return np.array(X), np.array(y)
 
     sequence_length = 30
-    X, y = create_sequences(df, sequence_length)
+    X, y = create_sequences(scaled_data, sequence_length)
     train_size = int(0.9 * len(X))
     X_train, X_test = X[:train_size], X[train_size:]
     y_train, y_test = y[:train_size], y[train_size:]
@@ -74,7 +74,7 @@ def run(data):
     y_pred_inv = scaler.inverse_transform(y_pred)
     y_test_inv = scaler.inverse_transform(y_test)
     print("Forecast data")
-    forecast_input = df[-sequence_length:].copy()  # shape (30, 4)
+    forecast_input = scaled_data[-sequence_length:].copy()  # shape (30, 4)
     forecast = []
 
     for _ in range(365):
@@ -85,8 +85,7 @@ def run(data):
 
     forecast = np.array(forecast)  # shape (365, 4)
     forecast_rescaled = scaler.inverse_transform(forecast)
-
-    last_date = df1['Date'].iloc[-1] 
+    last_date = df.index[-1]
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=365, freq='D')
 
     forecast_df = pd.DataFrame(forecast_rescaled, columns=df.columns, index=future_dates)

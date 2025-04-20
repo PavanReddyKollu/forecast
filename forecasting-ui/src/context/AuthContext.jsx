@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   function login(newToken) {
-    console.log(newToken)
     localStorage.setItem('token', newToken);
     setToken(newToken);
   }

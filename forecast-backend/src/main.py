@@ -5,7 +5,10 @@ from src.db.models import Base
 from src.db.session import engine
 from src.api.routers import auth, upload
 
-app = FastAPI() 
+app = FastAPI(
+    title="Forecasting API",
+    docs_url="/"
+) 
 
 @app.on_event("startup")
 async def startup():

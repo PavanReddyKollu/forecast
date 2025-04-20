@@ -10,7 +10,6 @@ router = APIRouter()
 
 @router.post('/check_user')
 async def check_user(user: Dict[Any, Any], db: AsyncSession = Depends(get_db)):
-    print(type(user))
     exists = bool(await get_user_by_username(db, user['username']))
     return {"exists": exists}
 
